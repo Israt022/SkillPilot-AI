@@ -32,7 +32,7 @@ export const Navbar = () => {
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const navLinks = isLoggedIn ? privateLinks : publicLinks;
+    const navLinks = session ? privateLinks : publicLinks;
 
     const handleSignOut = async () => {
         await authClient.signOut();
