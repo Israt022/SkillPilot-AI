@@ -1,16 +1,25 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
-import { Avatar } from "@heroui/react";
+import { Bell, Menu, Search } from "lucide-react";
+import { Avatar, Button } from "@heroui/react";
 import { useSession } from "@/lib/auth-client";
 
-export default function DashboardNavbar() {
+export default function DashboardNavbar({
+    setOpen
+}: {
+    setOpen: (value: boolean) => void
+}) {
 
     const { data: session } = useSession();
 
     return (
         <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b bg-background px-6">
-
+            <Button
+                onClick={() => setOpen(true)}
+                className="lg:hidden"
+            >
+                <Menu size={24} />
+            </Button>
             <div className="relative w-80">
 
                 <Search

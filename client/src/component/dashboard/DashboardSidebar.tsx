@@ -10,8 +10,10 @@ import {
     FolderKanban,
     User,
     LogOut,
+    X,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { Button } from "@heroui/react";
 
 const menus = [
     {
@@ -30,13 +32,13 @@ const menus = [
         icon: Brain,
     },
     {
-        title: "Add Resource",
-        href: "/dashboard/add-resource",
+        title: "Create Resource",
+        href: "/dashboard/create-resource",
         icon: PlusSquare,
     },
     {
-        title: "Manage Resources",
-        href: "/dashboard/manage-resource",
+        title: "My Resources",
+        href: "/dashboard/resource",
         icon: FolderKanban,
     },
     {
@@ -46,7 +48,13 @@ const menus = [
     },
 ];
 
-export default function DashboardSidebar() {
+export default function DashboardSidebar({
+    open,
+    setOpen
+}: {
+    open: boolean;
+    setOpen: (value: boolean) => void;
+}) {
     const router = useRouter();
     const pathname = usePathname();
     const handleSignOut = async () => {
@@ -55,8 +63,26 @@ export default function DashboardSidebar() {
     };
 
     return (
-        <aside className="hidden w-72 border-r bg-background lg:flex lg:flex-col">
+        <aside
+            className={`
+        fixed top-0 left-0 z-50 h-screen w-72 
+        border-r bg-background
+        transition-transform duration-300
 
+        lg:static lg:flex lg:flex-col lg:translate-x-0
+
+        ${open ? "translate-x-0" : "-translate-x-full"}
+    `}
+        >
+            {/* mobile close */}
+
+            <div className="flex justify-end p-4 lg:hidden">
+
+                <Button onClick={() => setOpen(false)}>
+                    <X />
+                </Button>
+
+            </div>
             <Link href={'/'}>
                 <div className="border-b p-6">
 
