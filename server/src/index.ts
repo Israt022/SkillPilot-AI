@@ -69,6 +69,61 @@ app.post("/api/ai", async (req, res) => {
   }
 });
 
+app.post("/api/ai/study-notes", async (req, res) => {
+  console.log(req.body);
+  try {
+    const { topic, level, length } = req.body;
+
+    const prompt = `
+          You are an expert programming instructor.
+
+          Generate structured study notes.
+
+          Topic: ${topic}
+          Difficulty: ${level}
+          Length: ${length}
+
+          Return markdown.
+
+          Include:
+
+          # Title
+
+          ## Overview
+
+          ## Key Concepts
+
+          ## Real-world Example
+
+          ## Best Practices
+
+          ## Common Mistakes
+
+          ## Practice Questions (5)
+
+          ## Summary
+        `;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+    });
+
+    res.json({
+      success: true,
+      result: response.text,
+    });
+
+  } catch (error: any) {
+    console.error("Study Notes Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 app.post("/api/resources", async (req, res) => {
   try {
     console.log("REQUEST BODY:", req.body);

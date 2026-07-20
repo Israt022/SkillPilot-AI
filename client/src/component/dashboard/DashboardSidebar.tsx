@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
+import { AiFillAccountBook } from "react-icons/ai";
 
 const menus = [
     {
@@ -30,6 +31,11 @@ const menus = [
         title: "AI Workspace",
         href: "/ai-workspace",
         icon: Brain,
+    },
+    {
+        title: "Studynote AI",
+        href: "/dashboard/study-note",
+        icon: AiFillAccountBook,
     },
     {
         title: "Create Resource",
