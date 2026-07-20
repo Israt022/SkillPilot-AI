@@ -16,7 +16,7 @@ export default function DashboardWrapper({
 
     return (
 
-        <div className="flex min-h-screen bg-default-50">
+        <div className="flex h-screen bg-default-50 overflow-hidden">
 
 
             <DashboardSidebar
@@ -25,14 +25,14 @@ export default function DashboardWrapper({
             />
 
 
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col overflow-hidden">
 
                 <DashboardNavbar
                     setOpen={setOpen}
                 />
 
 
-                <main className="flex-1 p-6">
+                <main className="flex-1 overflow-y-auto p-6">
                     {children}
                 </main>
 

@@ -143,6 +143,62 @@ app.get("/api/resources/:userId", async (req, res) => {
     });
   }
 });
+app.get("/api/resources", async (req, res) => {
+  try {
+    const client = await connectToMongoDB();
+
+    const db = client.db("SkillPilot-AI");
+    const resourcesCollection = db.collection("resources");
+
+    const resources = await resourcesCollection
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    res.status(200).json({
+      success: true,
+      data: resources,
+    });
+
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+app.get("/api/resource/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const client = await connectToMongoDB();
+
+    const db = client.db("SkillPilot-AI");
+
+    const resourcesCollection = db.collection("resources");
+
+    const resource = await resourcesCollection.findOne({
+      _id: new ObjectId(id),
+    });
+
+    if (!resource) {
+      return res.status(404).json({
+        success: false,
+        message: "Resource not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: resource,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
 app.patch("/api/resources/:id", async (req, res) => {
   try {
