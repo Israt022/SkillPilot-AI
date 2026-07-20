@@ -26,7 +26,7 @@ const privateLinks = [
 
 export const Navbar = () => {
     const { data: session, isPending } = useSession();
-    const pathname = usePathname();
+    const pathName = usePathname();
     const router = useRouter();
     const { isLoggedIn, logout } = useAuth();
 
@@ -37,6 +37,10 @@ export const Navbar = () => {
     const handleSignOut = async () => {
         await authClient.signOut();
     };
+    if (pathName.includes('dashboard')) {
+        return null;
+    }
+
 
     return (
         <nav className="sticky top-0 z-40 w-full border-b border-default-200 bg-background/70 backdrop-blur-lg">
@@ -59,7 +63,7 @@ export const Navbar = () => {
                         <li key={link.href}>
                             <Link
                                 href={link.href}
-                                className={`transition-all duration-300 hover:text-primary ${pathname === link.href
+                                className={`transition-all duration-300 hover:text-primary ${pathName === link.href
                                     ? "font-semibold text-primary"
                                     : "text-default-600"
                                     }`}
@@ -132,7 +136,7 @@ export const Navbar = () => {
                                     <Link
                                         href={link.href}
                                         onClick={() => setIsMenuOpen(false)}
-                                        className={`block rounded-lg px-3 py-2.5 font-medium transition-all duration-200 ${pathname === link.href
+                                        className={`block rounded-lg px-3 py-2.5 font-medium transition-all duration-200 ${pathName === link.href
                                             ? "bg-primary text-white"
                                             : "text-default-700 hover:bg-default-100"
                                             }`}

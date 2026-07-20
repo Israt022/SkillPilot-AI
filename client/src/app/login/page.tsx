@@ -4,14 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bot, Eye, EyeOff, Mail, Lock, Sparkles } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+// import { useAuth } from "@/context/AuthContext";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { Button } from "@heroui/react";
 
 export default function LoginPage() {
 
 
     const router = useRouter();
-    const { login } = useAuth();
+    // const { login } = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -19,21 +21,55 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isDemoLoading, setIsDemoLoading] = useState(false);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-        setTimeout(() => {
-            login();
-            router.push("/dashboard");
-        }, 1200);
+        // const formData = new FormData(e.currentTarget);
+        // const email = formData.get("email") as string;
+        // const password = formData.get("password") as string;
+        const result = await authClient.signIn.email({
+            email,
+            password,
+            callbackURL: "/dashboard",
+        });
+        // console.log(email);
+        // console.log(password);
+        // console.log(typeof email);
+        // console.log(typeof password);
+        setIsLoading(false);
+        if (result.error) {
+            toast.error(result.error.message ?? "Invalid email or password");
+            return;
+        }
+        toast.success("Login successful!");
+        router.push("/dashboard");
+        router.refresh();
     };
 
-    const handleDemoLogin = () => {
+    const handleDemoLogin = async () => {
         setIsDemoLoading(true);
-        setTimeout(() => {
-            login();
-            router.push("/dashboard");
-        }, 1000);
+
+        const demoEmail = "demo@skillpilot.ai";
+        const demoPassword = "demo123456";
+
+        setEmail(demoEmail);
+        setPassword(demoPassword);
+
+        const result = await authClient.signIn.email({
+            email: demoEmail,
+            password: demoPassword,
+            callbackURL: "/dashboard",
+        });
+
+        setIsDemoLoading(false);
+
+        if (result.error) {
+            toast.error(result.error.message ?? "Demo login failed");
+            return;
+        }
+
+        toast.success("Welcome to Demo Account!");
+        router.push("/dashboard");
     };
 
     const handleGoogleLogin = async () => {
@@ -43,7 +79,7 @@ export default function LoginPage() {
             callbackURL: "/",
         });
         // alert("Google login coming soon!");
-        console.log(data)
+        // console.log(data)
     };
 
     return (
@@ -182,9 +218,9 @@ export default function LoginPage() {
                         </div>
 
                         {/* Submit */}
-                        <button
+                        <Button
                             type="submit"
-                            disabled={isLoading}
+                            isDisabled={isLoading}
                             className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:bg-primary/90 active:scale-[0.98] disabled:opacity-70"
                         >
                             {isLoading ? (
@@ -195,7 +231,7 @@ export default function LoginPage() {
                             ) : (
                                 "Sign In"
                             )}
-                        </button>
+                        </Button>
                     </form>
 
                     {/* Footer */}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Bot, Mail, MapPin } from "lucide-react";
 import { FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 const footerLinks = {
     Product: [
@@ -18,6 +19,11 @@ const footerLinks = {
 };
 
 export default function Footer() {
+    const pathName = usePathname();
+    if (pathName.includes('dashboard')) {
+        return null;
+    }
+
     return (
         <footer
             className="relative overflow-hidden border-t"
