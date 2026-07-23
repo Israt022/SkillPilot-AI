@@ -179,7 +179,6 @@ Automatically:
 - TypeScript
 - Tailwind CSS
 - HeroUI
-- TanStack Query
 - React Hot Toast
 - Lucide Icons
 
