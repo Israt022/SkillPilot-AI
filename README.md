@@ -260,7 +260,3 @@ Frontend & Full Stack Developer
 - Email: eraisrat022@gmail.com
 
 ---
-
-# 📄 License
-
-This project is developed for educational purposes under the Programming Hero SCIC Agentic AI Assignment.
