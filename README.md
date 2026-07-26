@@ -1,20 +1,23 @@
 <h1 align="center">🤖 SkillPilot AI</h1>
 
 <p align="center">
-<img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=24&pause=1000&color=4F8EF7&center=true&vCenter=true&width=650&lines=AI-Powered+Learning+Resource+Platform;Generate+Smart+Learning+Content;Discover+Resources+with+Agentic+AI;Built+with+Next.js+%2B+Gemini+AI" />
+<img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=24&pause=1000&color=4F8EF7&center=true&vCenter=true&width=650&lines=AI-Powered+Learning+Resource+Platform;Generate+Smart+Learning+Content;Discover+Resources+with+AI;Built+with+Next.js+%2B+Gemini+AI" />
 </p>
 
 <p align="center">
 Next.js • TypeScript • Express.js • MongoDB • Gemini AI
 </p>
 
-> An Agentic AI-powered learning platform that helps users discover, organize, and generate high-quality learning resources with intelligent recommendations and AI assistance.
+> An AI-powered learning platform that helps users discover, organize, and generate high-quality learning resources with intelligent recommendations and AI assistance.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge)
-![Gemini AI](https://img.shields.io/badge/Gemini-AI-4285F4?style=for-the-badge)
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <br><br>
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Gemini-AI-4285F4?style=for-the-badge" />
+</p>
 
 ---
 
@@ -28,7 +31,7 @@ Next.js • TypeScript • Express.js • MongoDB • Gemini AI
 
 SkillPilot AI is an intelligent learning resource platform designed to simplify the way students and developers discover educational content.
 
-Unlike traditional resource directories, SkillPilot AI leverages Agentic AI workflows to generate educational content, recommend personalized learning resources, classify learning materials, and assist users through contextual AI conversations.
+Unlike traditional resource directories, SkillPilot AI leverages LLM-based AI workflows to generate educational content, recommend personalized learning resources, classify learning materials, and assist users through contextual AI conversations.
 
 The application combines modern full-stack technologies with Large Language Models (LLMs) to provide a production-ready AI-powered experience.
 
@@ -70,7 +73,7 @@ The application combines modern full-stack technologies with Large Language Mode
 
 ---
 
-# 🤖 Agentic AI Features
+# 🤖 AI Features
 
 ## ✨ AI Content Generator
 
@@ -102,7 +105,7 @@ An intelligent assistant capable of:
 
 - Answering learning questions
 - Guiding users through the platform
-- Understanding previous conversation context
+- Providing contextual AI responses
 - Suggesting learning paths
 
 ---
@@ -198,7 +201,8 @@ Automatically:
 
 - Google Gemini API
 - Prompt Engineering
-- Agentic AI Workflow
+- LLM-based AI Workflows
+- Context-aware Content Generation
 
 ---
 
