@@ -183,6 +183,7 @@ Automatically:
 - HeroUI
 - React Hot Toast
 - Lucide Icons
+- Better Auth 
 
 ---
 
@@ -192,7 +193,6 @@ Automatically:
 - Express.js
 - MongoDB
 - TypeScript
-- Better Auth / JWT
 
 ---
 
