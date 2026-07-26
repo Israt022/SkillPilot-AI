@@ -14,7 +14,6 @@ Next.js • TypeScript • Express.js • MongoDB • Gemini AI
   <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
   <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
-  <br><br>
   <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Gemini-AI-4285F4?style=for-the-badge" />
 </p>
