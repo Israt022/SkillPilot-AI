@@ -8,6 +8,7 @@ import { Navbar } from "@/component/Navbar";
 import { AuthProvider } from "@/context/AuthContext";
 import Footer from '@/component/Footer';
 import { Toaster } from 'react-hot-toast';
+import NextTopLoader from 'nextjs-toploader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {/* <AuthProvider> */}
+        {/* <NextTopLoader /> */}
         <Navbar />
         {children}
         <Footer />

@@ -78,7 +78,7 @@ export const Navbar = () => {
                 <div className="hidden items-center gap-3 md:flex">
                     {session ? (
                         <>
-                            <Link href="/dashboard/profile" className="inline-block">
+                            <Link href="/dashboard/user/profile" className="inline-block">
                                 <Button variant="outline" size="sm">
                                     <span className="flex items-center gap-2">
                                         <User size={16} />
@@ -152,7 +152,7 @@ export const Navbar = () => {
                         {session ? (
                             <div className="flex flex-col gap-2">
                                 <Link
-                                    href="/dashboard/profile"
+                                    href="/dashboard/user/profile"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     <Button variant="outline" fullWidth>

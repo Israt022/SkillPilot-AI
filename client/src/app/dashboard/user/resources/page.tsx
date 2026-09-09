@@ -1,7 +1,6 @@
 import ResourceList from "@/component/dashboard/resource/ResourceList";
 import { getUserSession } from "@/lib/core/session";
 
-
 export default async function MyResources() {
     const user = await getUserSession();
 

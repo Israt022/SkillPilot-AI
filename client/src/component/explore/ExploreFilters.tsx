@@ -27,11 +27,18 @@ export default function ExploreFilters(props: any) {
 
                 <Select.Popover>
                     <ListBox>
-                        <ListBox.Item id="All">All</ListBox.Item>
-                        <ListBox.Item id="Frontend">Frontend</ListBox.Item>
-                        <ListBox.Item id="Backend">Backend</ListBox.Item>
-                        <ListBox.Item id="AI">AI</ListBox.Item>
-                        <ListBox.Item id="Career">Career</ListBox.Item>
+                        <ListBox.Item id="All">
+                            All
+                        </ListBox.Item>
+
+                        {props.categories.map((category: any) => (
+                            <ListBox.Item
+                                key={category._id}
+                                id={category.name}
+                            >
+                                {category.name}
+                            </ListBox.Item>
+                        ))}
                     </ListBox>
                 </Select.Popover>
             </Select>

@@ -9,17 +9,41 @@ export async function proxy(request: NextRequest) {
 
     const pathname = request.nextUrl.pathname;
 
-    // Dashboard এবং Explore Details protect
-    const isProtected =
+    // ── Protect admin routes ──
+    if (pathname.startsWith("/dashboard/admin")) {
+        // Must be logged in
+        if (!session) {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+        // Must have admin role
+        if ((session.user as any).role !== "admin") {
+            return NextResponse.redirect(new URL("/dashboard/user", request.url));
+        }
+        return NextResponse.next();
+    }
+
+    // ── Protect user dashboard routes ──
+    if (pathname.startsWith("/dashboard/user")) {
+        // Must be logged in
+        if (!session) {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+        // Must have user role
+        if ((session.user as any).role !== "user") {
+            return NextResponse.redirect(new URL("/dashboard/admin", request.url));
+        }
+        return NextResponse.next();
+    }
+
+    // ── Protect base dashboard & other private routes ──
+    const isUserProtected =
         pathname.startsWith("/dashboard") ||
         pathname.startsWith("/explore/") ||
         pathname.startsWith("/ai-workspace") ||
         pathname.startsWith("/contact");
 
-    if (isProtected && !session) {
-        return NextResponse.redirect(
-            new URL("/login", request.url)
-        );
+    if (isUserProtected && !session) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     return NextResponse.next();

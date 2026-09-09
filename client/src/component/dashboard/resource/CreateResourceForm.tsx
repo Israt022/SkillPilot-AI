@@ -11,17 +11,37 @@ import {
     Fieldset,
 } from "@heroui/react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { imgUpload } from "@/lib/imageUpload";
+import { useSession } from "@/lib/auth-client";
+
+interface Category {
+    _id: string;
+    name: string;
+}
+
+const defaultCategories = [
+    { _id: "1", name: "Frontend" },
+    { _id: "2", name: "Backend" },
+    { _id: "3", name: "Artificial Intelligence" },
+    { _id: "4", name: "Career" },
+    { _id: "5", name: "DevOps" },
+    { _id: "6", name: "Mobile Development" },
+];
 
 const CreateResourceForm = ({ user }: { user: any }) => {
-    console.log("USER:", user);
+    const { data: session } = useSession();
     const router = useRouter();
     const [tags, setTags] = useState<string[]>([]);
     const [preview, setPreview] = useState("");
+    const [categories, setCategories] = useState<Category[]>(defaultCategories);
+    const [selectedCategory, setSelectedCategory] = useState("Frontend");
+    const [selectedType, setSelectedType] = useState("Course");
+    const [selectedLevel, setSelectedLevel] = useState("Beginner");
+
     const resourceTags = [
         "React",
         "Next.js",
@@ -30,29 +50,57 @@ const CreateResourceForm = ({ user }: { user: any }) => {
         "Database",
         "Career",
     ];
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/categories`);
+                const data = await res.json();
+                if (data.success && data.data?.length) {
+                    setCategories(data.data);
+                    setSelectedCategory(data.data[0].name);
+                }
+            } catch (err) {
+                console.error("Failed to load categories:", err);
+            }
+        };
+        fetchCategories();
+    }, []);
+
     const handleSubmit = async (
         e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault();
+        const activeUser = user || session?.user;
+        const activeUserId = activeUser?.id || activeUser?._id;
+
+        if (!activeUserId) {
+            toast.error("Please login to create a resource");
+            return;
+        }
+
         const formData = new FormData(e.currentTarget);
         const imageFile = formData.get("image") as File;
 
-        const uploadedImage = await imgUpload(imageFile);
+        let uploadedUrl = "";
+        if (imageFile && imageFile.size > 0) {
+            const uploadedImage = await imgUpload(imageFile);
+            uploadedUrl = uploadedImage?.url || "";
+        }
+
         const resourceData = {
             title: formData.get("title"),
-            category: formData.get("category"),
-            type: formData.get("type"),
-            level: formData.get("level"),
-            shortDescription:
-                formData.get("shortDescription"),
-            description:
-                formData.get("description"),
-            url:
-                formData.get("url"),
-            image: uploadedImage?.url,
+            category: selectedCategory || formData.get("category") || "General",
+            type: selectedType || formData.get("type") || "Article",
+            level: selectedLevel || formData.get("level") || "Beginner",
+            shortDescription: formData.get("shortDescription"),
+            description: formData.get("description"),
+            url: formData.get("url"),
+            image: uploadedUrl,
             tags,
-            userId: user.id
+            userId: activeUserId,
         };
+
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/resources`, {
                 method: "POST",
@@ -66,14 +114,14 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                 toast.error(data.message || "Failed to create resource");
                 return;
             }
-            console.log(data);
             toast.success("Resource created successfully!");
-            router.push("/dashboard/resource");
+            router.push("/dashboard/user/resources");
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toast.error("Something went wrong!");
         }
     };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-background px-4 py-10">
             <div className="mx-auto max-w-3xl">
@@ -91,6 +139,7 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                             Share useful learning materials with SkillPilot AI community.
                         </p>
                     </div>
+
                     <Form
                         onSubmit={handleSubmit}
                         className="space-y-8"
@@ -108,6 +157,7 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                     <Input
                                         name="title"
                                         placeholder="Learn React Hooks"
+                                        required
                                     />
                                 </div>
                                 <div className="grid gap-5 md:grid-cols-2">
@@ -115,25 +165,24 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                         <Label>
                                             Category
                                         </Label>
-                                        <Select name="category">
+                                        <Select
+                                            name="category"
+                                            selectedKey={selectedCategory}
+                                            onSelectionChange={(key) => {
+                                                if (key) setSelectedCategory(String(key));
+                                            }}
+                                        >
                                             <Select.Trigger>
                                                 <Select.Value />
                                                 <Select.Indicator />
                                             </Select.Trigger>
                                             <Select.Popover>
                                                 <ListBox>
-                                                    <ListBox.Item id="Frontend">
-                                                        Frontend
-                                                    </ListBox.Item>
-                                                    <ListBox.Item id="Backend">
-                                                        Backend
-                                                    </ListBox.Item>
-                                                    <ListBox.Item id="AI">
-                                                        Artificial Intelligence
-                                                    </ListBox.Item>
-                                                    <ListBox.Item id="Career">
-                                                        Career
-                                                    </ListBox.Item>
+                                                    {categories.map((c) => (
+                                                        <ListBox.Item key={c._id} id={c.name}>
+                                                            {c.name}
+                                                        </ListBox.Item>
+                                                    ))}
                                                 </ListBox>
                                             </Select.Popover>
                                         </Select>
@@ -142,7 +191,13 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                         <Label>
                                             Resource Type
                                         </Label>
-                                        <Select name="type">
+                                        <Select
+                                            name="type"
+                                            selectedKey={selectedType}
+                                            onSelectionChange={(key) => {
+                                                if (key) setSelectedType(String(key));
+                                            }}
+                                        >
                                             <Select.Trigger>
                                                 <Select.Value />
                                                 <Select.Indicator />
@@ -170,7 +225,13 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                     <Label>
                                         Difficulty Level
                                     </Label>
-                                    <Select name="level">
+                                    <Select
+                                        name="level"
+                                        selectedKey={selectedLevel}
+                                        onSelectionChange={(key) => {
+                                            if (key) setSelectedLevel(String(key));
+                                        }}
+                                    >
                                         <Select.Trigger>
                                             <Select.Value />
                                             <Select.Indicator />
@@ -192,6 +253,7 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                 </div>
                             </Fieldset.Group>
                         </Fieldset>
+
                         {/* Description */}
                         <Fieldset className="rounded-2xl border border-default-200 p-6">
                             <Fieldset.Legend className="text-lg font-semibold">
@@ -219,6 +281,7 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                 </div>
                             </Fieldset.Group>
                         </Fieldset>
+
                         {/* Links */}
                         <Fieldset className="rounded-2xl border border-default-200 p-6">
                             <Fieldset.Legend className="text-lg font-semibold">
@@ -235,7 +298,6 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                     />
                                 </div>
                                 <div className="flex flex-col gap-3">
-
                                     <Label>
                                         Resource Image
                                     </Label>
@@ -255,11 +317,9 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                                     <div className="text-4xl">
                                                         🖼️
                                                     </div>
-
                                                     <p className="mt-3 font-semibold">
                                                         Upload Resource Image
                                                     </p>
-
                                                     <p className="text-sm text-default-500">
                                                         Click to select image
                                                     </p>
@@ -275,7 +335,6 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                         className="hidden"
                                         onChange={(e) => {
                                             const file = e.target.files?.[0];
-
                                             if (file) {
                                                 setPreview(URL.createObjectURL(file));
                                             }
@@ -284,7 +343,7 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                 </div>
                             </Fieldset.Group>
                         </Fieldset>
-                        {/* Tags */}
+
                         {/* Tags */}
                         <Fieldset className="rounded-2xl border border-default-200 p-6">
                             <Fieldset.Legend className="text-lg font-semibold">
@@ -298,34 +357,27 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                             type="button"
                                             key={tag}
                                             onClick={() => {
-
                                                 setTags(prev =>
                                                     prev.includes(tag)
                                                         ? prev.filter(t => t !== tag)
                                                         : [...prev, tag]
                                                 );
-
                                             }}
-
                                             className={`
                         flex items-center justify-center gap-2 rounded-xl border px-4 py-3 
                         text-sm font-semibold transition-all duration-200
-
                         ${selected
                                                     ? "border-primary bg-primary text-white shadow-md scale-[1.02]"
                                                     : "border-default-200 hover:border-primary hover:bg-primary/5"
                                                 }
                     `}
                                         >
-
                                             {selected && (
                                                 <span>
                                                     ✓
                                                 </span>
                                             )}
-
                                             {tag}
-
                                         </button>
                                     );
                                 })}
@@ -348,6 +400,7 @@ const CreateResourceForm = ({ user }: { user: any }) => {
                                 )
                             }
                         </Fieldset>
+
                         <Button
                             type="submit"
                             className="w-full bg-primary text-white"
@@ -360,6 +413,6 @@ const CreateResourceForm = ({ user }: { user: any }) => {
             </div>
         </div>
     );
-}
+};
 
-export default CreateResourceForm
+export default CreateResourceForm;

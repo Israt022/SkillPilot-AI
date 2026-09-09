@@ -11,15 +11,16 @@ import {
     User,
     LogOut,
     X,
+    ShieldCheck,
 } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
 import { AiFillAccountBook } from "react-icons/ai";
 
 const menus = [
     {
         title: "Dashboard",
-        href: "/dashboard",
+        href: "/dashboard/user",
         icon: LayoutDashboard,
     },
     {
@@ -34,22 +35,22 @@ const menus = [
     },
     {
         title: "Studynote AI",
-        href: "/dashboard/study-note",
+        href: "/dashboard/user/study-note",
         icon: AiFillAccountBook,
     },
     {
         title: "Create Resource",
-        href: "/dashboard/create-resource",
+        href: "/dashboard/user/create-resource",
         icon: PlusSquare,
     },
     {
         title: "My Resources",
-        href: "/dashboard/resource",
+        href: "/dashboard/user/resources",
         icon: FolderKanban,
     },
     {
         title: "Profile",
-        href: "/dashboard/profile",
+        href: "/dashboard/user/profile",
         icon: User,
     },
 ];
@@ -63,6 +64,9 @@ export default function DashboardSidebar({
 }) {
     const router = useRouter();
     const pathname = usePathname();
+    const { data: session } = useSession();
+    const isAdmin = (session?.user as any)?.role === "admin";
+
     const handleSignOut = async () => {
         await authClient.signOut();
         router.replace("/login");
@@ -81,38 +85,36 @@ export default function DashboardSidebar({
     `}
         >
             {/* mobile close */}
-
             <div className="flex justify-end p-4 lg:hidden">
-
                 <Button onClick={() => setOpen(false)}>
                     <X />
                 </Button>
-
             </div>
+
             <Link href={'/'}>
                 <div className="border-b p-6">
-
                     <h2 className="text-2xl font-bold">
                         SkillPilot AI
                     </h2>
-
                     <p className="text-sm text-default-500">
                         Learning Dashboard
                     </p>
-
                 </div>
             </Link>
 
             <nav className="flex-1 space-y-2 p-4">
-
                 {menus.map((item) => {
                     const Icon = item.icon;
+                    const isActive =
+                        item.href === "/dashboard/user"
+                            ? pathname === "/dashboard/user"
+                            : pathname.startsWith(item.href);
 
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 rounded-xl px-4 py-3 transition ${pathname === item.href
+                            className={`flex items-center gap-3 rounded-xl px-4 py-3 transition ${isActive
                                 ? "bg-primary text-white"
                                 : "hover:bg-default-100"
                                 }`}
@@ -122,15 +124,26 @@ export default function DashboardSidebar({
                         </Link>
                     );
                 })}
+
+                {/* Admin Panel link — only visible to admins */}
+                {isAdmin && (
+                    <div className="pt-3 mt-3 border-t border-default-200">
+                        <Link
+                            href="/dashboard/admin"
+                            className="flex items-center gap-3 rounded-xl px-4 py-3 transition bg-danger/10 text-danger hover:bg-danger/20 font-semibold"
+                        >
+                            <ShieldCheck size={20} />
+                            Admin Panel
+                        </Link>
+                    </div>
+                )}
             </nav>
 
             <div className="border-t p-4">
-
                 <button onClick={handleSignOut} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 hover:bg-danger/10">
                     <LogOut size={20} />
                     Logout
                 </button>
-
             </div>
         </aside>
     );
