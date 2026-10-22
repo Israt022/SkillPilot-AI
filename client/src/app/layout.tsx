@@ -9,6 +9,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import Footer from '@/component/Footer';
 import { Toaster } from 'react-hot-toast';
 import NextTopLoader from 'nextjs-toploader';
+import NetworkMonitor from '@/component/shared/NetworkMonitor';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,7 @@ export default function RootLayout({
         {/* <AuthProvider> */}
         {/* <NextTopLoader /> */}
         <Navbar />
-        {children}
+        <NetworkMonitor>{children}</NetworkMonitor>
         <Footer />
         {/* </AuthProvider> */}
         <Toaster
